@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Hub - เลือกแผนออกกำลังกาย</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --success: #22c55e;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .hub-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 14px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hub-btn span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .hub-btn:hover, .hub-btn.active {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--accent);
+        }
+
+        .exercise-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exercise-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .exercise-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .set-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .set-box.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: #fff;
+        }
+
+        .timer-card {
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 8px 0;
+            color: var(--accent);
+        }
+
+        .timer-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-secondary {
+            background: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Workout Hub</h1>
+        <p>เลือกแผนออกกำลังกายตามใจคุณวันนี้</p>
+    </header>
+
+    <!-- เลือกแผนออกกำลังกาย -->
+    <div class="card">
+        <div style="font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: var(--text-muted);">เลือกหมวดหมู่ที่ต้องการฝึกวันนี้:</div>
+        <div class="hub-grid" id="hubSelector"></div>
+    </div>
+
+    <!-- รายการออกกำลังกายของแผนที่เลือก -->
+    <div class="card">
+        <div class="section-title">
+            <span id="currentPlanTitle">ชื่อแผนออกกำลังกาย</span>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;" onclick="resetProgress()">รีเซ็ตติ๊ก</button>
+        </div>
+        <div id="exerciseList"></div>
+    </div>
+
+    <!-- ตัวจับเวลาพัก -->
+    <div class="card timer-card">
+        <div style="font-size: 0.9rem; color: var(--text-muted);">Rest Timer</div>
+        <div class="timer-display" id="timerDisplay">00:00</div>
+        <div class="timer-btns">
+            <button class="btn btn-secondary" onclick="startTimer(30)">30 วิ</button>
+            <button class="btn btn-secondary" onclick="startTimer(60)">60 วิ</button>
+            <button class="btn" onclick="stopTimer()">รีเซ็ต</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const plans = {
+        cardio: {
+            name: "🏃‍♂️ วิ่งคาร์ดิโอ (Cardio & Endurance)",
+            exercises: [
+                { name: "วิ่ง Zone 2 (เหยาะๆ ยาวๆ)", sets: 1, detail: "45-60 นาที (เป้าหมาย 5.5-6 กม.)" }
+            ]
+        },
+        lower_sculpt: {
+            name: "🦵 ลดต้นขา & ปั้นสะโพก (Lower Body Toning)",
+            exercises: [
+                { name: "Goblet Squat (ถือดัมเบล/Kettlebell)", sets: 3, detail: "12-15 ครั้ง" },
+                { name: "Romanian Deadlifts (RDLs)", sets: 3, detail: "12 ครั้ง" },
+                { name: "Bulgarian Split Squats (วางขาหลังบนเก้าอี้)", sets: 3, detail: "ข้างละ 10 ครั้ง" },
+                { name: "Sumo Squat (เน้นต้นขาด้านใน)", sets: 3, detail: "12 ครั้ง" },
+                { name: "Calf Raises (ถือดัมเบล)", sets: 3, detail: "15-20 ครั้ง" }
+            ]
+        },
+        upper_body: {
+            name: "💪 ช่วงบน กระชับอก/แขน/หลัง (Upper Body)",
+            exercises: [
+                { name: "Push-up (วิดพื้น)", sets: 3, detail: "8-12 ครั้ง" },
+                { name: "Pull-ups / Negative Pull-ups (โหนบาร์)", sets: 3, detail: "Max ครั้ง" },
+                { name: "Lat Pulldown (ใช้เชือกเคเบิลยืนดึง)", sets: 3, detail: "12 ครั้ง" },
+                { name: "Dumbbell Shoulder Press", sets: 3, detail: "10 ครั้ง" },
+                { name: "Dumbbell Bicep Curls", sets: 3, detail: "12 ครั้ง" }
+            ]
+        },
+        full_body: {
+            name: "🔥 ฟูลบอดี้ กระชับทั่วร่าง (Full Body Burn)",
+            exercises: [
+                { name: "Kettlebell Swings", sets: 3, detail: "15 ครั้ง" },
+                { name: "Goblet Squat", sets: 3, detail: "12 ครั้ง" },
+                { name: "Push-ups", sets: 3, detail: "10 ครั้ง" },
+                { name: "Walking Lunges (ถือดัมเบล)", sets: 3, detail: "ไป-กลับ 10 ก้าว" },
+                { name: "Lat Pulldown (เชือก)", sets: 3, detail: "12 ครั้ง" }
+            ]
+        },
+        core_abs: {
+            name: "🛡️ หน้าท้อง & แกนกลาง (Core & Abs)",
+            exercises: [
+                { name: "Leg Raises (บนเครื่องยกขา)", sets: 3, detail: "15 ครั้ง" },
+                { name: "Sit-ups", sets: 3, detail: "15 ครั้ง" },
+                { name: "Plank", sets: 3, detail: "45 วินาที" }
+            ]
+        }
+    };
+
+    let currentPlanKey = 'lower_sculpt';
+    let progress = JSON.parse(localStorage.getItem('workout_hub_progress') || '{}');
+    let timer = null;
+
+    function init() {
+        const selector = document.getElementById('hubSelector');
+        selector.innerHTML = Object.keys(plans).map(key => `
+            <button class="hub-btn ${key === currentPlanKey ? 'active' : ''}" onclick="selectPlan('${key}')">
+                ${plans[key].name.split(' ')[0]} ${plans[key].name.split(' ')[1]}
+                <span>${plans[key].exercises.length} ท่าฝึก</span>
+            </button>
+        `).join('');
+
+        renderExercises();
+    }
+
+    function selectPlan(key) {
+        currentPlanKey = key;
+        init();
+    }
+
+    function renderExercises() {
+        const plan = plans[currentPlanKey];
+        document.getElementById('currentPlanTitle').innerText = plan.name;
+        
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = plan.exercises.map((ex, exIndex) => {
+            let setsHtml = '';
+            for (let s = 0; s < ex.sets; s++) {
+                const key = `${currentPlanKey}-${exIndex}-${s}`;
+                const checked = progress[key] ? 'checked' : '';
+                setsHtml += `<div class="set-box ${checked}" onclick="toggleSet('${key}')">${s+1}</div>`;
+            }
+
+            return `
+                <div class="exercise-item">
+                    <div class="exercise-info">
+                        <h4>${ex.name}</h4>
+                        <p>${ex.detail}</p>
+                    </div>
+                    <div class="checkbox-group">${setsHtml}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function toggleSet(key) {
+        progress[key] = !progress[key];
+        localStorage.setItem('workout_hub_progress', JSON.stringify(progress));
+        renderExercises();
+    }
+
+    function resetProgress() {
+        if(confirm("ต้องการรีเซ็ตผลการติ๊กของแผนนี้หรือไม่?")) {
+            Object.keys(progress).forEach(k => {
+                if(k.startsWith(currentPlanKey)) delete progress[k];
+            });
+            localStorage.setItem('workout_hub_progress', JSON.stringify(progress));
+            renderExercises();
+        }
+    }
+
+    function startTimer(seconds) {
+        clearInterval(timer);
+        let timeLeft = seconds;
+        const display = document.getElementById('timerDisplay');
+        
+        timer = setInterval(() => {
+            let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            let s = (timeLeft % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                display.innerText = "00:00";
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timer);
+        document.getElementById('timerDisplay').innerText = "00:00";
+    }
+
+    init();
+</script>
+
+</body>
+</html>
